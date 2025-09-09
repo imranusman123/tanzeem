@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>تنظیم تدفین و تکفین</title>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#336699">
+
+<!-- Fonts + Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://fonts.cdnfonts.com/css/jameel-noori-nastaleeq" rel="stylesheet">
+
+<style>
+body {
+  font-family: 'Jameel Noori Nastaleeq', serif;
+  margin:0;
+  background:#f5f6fa;
+  text-align:center;
+  color:#2c3e50;
+}
+.container {
+  max-width: 900px;
+  margin:20px auto;
+  padding:25px;
+  background:#ffffff;
+  border-radius:12px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.15);
+}
+h2 {
+  font-size:28px;
+  padding:15px;
+  border-radius:8px;
+  background: linear-gradient(90deg,#003366,#336699);
+  color:white;
+  margin-bottom:20px;
+}
+.section { margin-bottom:20px; padding:18px; border-radius:10px; background:#f0f2f5; }
+.section-title { font-weight:bold; font-size:18px; margin-bottom:12px; color:#003366; }
+
+/* ذاتی معلومات کے ہر ان پٹ پر ہلکی بارڈر */
+.info input, .info textarea, .info select {
+  width:100%; padding:14px; margin:5px 0;
+  border-radius:8px; border:1px solid #bbb;
+  font-size:18px; font-weight:bold; text-align:center;
+  background:#ffffff; color:#2c3e50; box-sizing:border-box;
+}
+.info textarea { height:90px; resize:none; }
+.info select { height:55px; font-weight:bold; background:#eef2f7; }
+.info { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
+
+table { width:100%; border-collapse: collapse; margin-top:15px; font-size:16px; text-align:center; }
+table, th, td { border:1px solid #777; }
+th { padding:14px; color:white; background:#003366; }
+tr:nth-child(even){background:#f9f9f9;}
+td { padding:12px; vertical-align:middle; }
+table td input { width:90px; padding:10px; font-size:16px; font-weight:bold; text-align:center; border:1px solid #aaa; border-radius:5px; }
+
+#totalBox { font-weight:bold; text-align:center; font-size:18px; margin-top:15px; color:#003366; }
+.terms p { margin:5px 0; font-size:14px; text-align:right; }
+.download-btns { text-align:center; margin-top:20px;}
+button { padding:14px 24px; margin:5px; border:none; border-radius:8px; background:#336699; color:white; cursor:pointer; font-size:16px; transition:0.3s; }
+button:hover { background:#003366; }
+
+#purposeDisplay {
+  font-size:24px; font-weight:bold;
+  margin-top:15px; padding:10px;
+  border:2px solid #003366;
+  border-radius:8px; background:#eef3fb; color:#003366;
+}
+
+@media(max-width:768px){
+  .info { grid-template-columns:1fr; }
+  table, th, td { font-size:14px; }
+  h2 { font-size:22px; }
+  table td input { width:70px; font-size:14px; }
+  #purposeDisplay { font-size:20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container" id="captureArea">
+  <h2>تنظیم تدفین و تکفین</h2>
+
+  <div class="section">
+    <div class="section-title">ذاتی معلومات</div>
+    <div class="info">
+      <input type="text" id="name" placeholder="نام درج کریں">
+      <input type="text" id="cnic" placeholder="شناختی کارڈ نمبر درج کریں">
+      <textarea id="address" placeholder="گھر کا مکمل پتہ درج کریں (زیادہ سے زیادہ 2 لائنز)"></textarea>
+      <input type="date" id="date">
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">استعمال کا مقصد</div>
+    <select id="purpose" onchange="toggleRates()">
+      <option value="fotgi">فوتگی</option>
+      <option value="other">فوتگی کے علاوہ</option>
+    </select>
+    <div id="purposeDisplay">منتخب مقصد: فوتگی</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">سامان کی فہرست</div>
+    <table id="itemsTable">
+      <thead>
+        <tr>
+          <th>سامان</th>
+          <th>تعداد</th>
+          <th class="rateCol">بازار ریٹ</th>
+          <th class="rateCol">ہمارا ریٹ (50%)</th>
+        </tr>
+      </thead>
+      <tbody id="itemsBody"></tbody>
+    </table>
+    <div id="totalBox"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">شرائط و ضوابط</div>
+    <div class="terms">
+      <p>1۔ یہ سامان فوتگی کے موقع پر فی سبیل اللہ دیا جاتا ہے۔</p>
+      <p>2۔ فوتگی کے علاوہ کسی بھی مقصد کے لیے سامان لیا جائے تو اس کی آدھی قیمت بازار ریٹ کے مطابق وصول کی جائے گی۔</p>
+      <p>3۔ سامان لیتے وقت دو ہزار روپے اور اصل شناختی کارڈ لازمی جمع کرانا ہوگا۔</p>
+      <p>4۔ سامان جس حالت میں دیا جائے گا، اسی حالت میں واپس لینا ہوگا۔</p>
+      <p>5۔ بارش کی صورت میں گیلا سامان خشک کر کے ہی واپس لینا ہوگا۔</p>
+      <p>6۔ سامان زیادہ سے زیادہ 1-2 دن تک رکھا جا سکتا ہے، اس کے بعد تاخیر پر قیمت وصول کی جائے گی۔</p>
+      <p>7۔ سامان واپس کرنے کا وقت صبح 8 بجے سے 10 بجے تک ہے۔</p>
+      <p>8۔ سامان کم یا ٹوٹنے کی صورت میں اس کی قیمت وصول کی جائے گی۔</p>
+    </div>
+  </div>
+</div>
+
+<div class="download-btns">
+  <button onclick="downloadPNG()">Download as PNG</button>
+  <button onclick="downloadPDF()">Download as PDF</button>
+</div>
+
+<script>
+const items = [
+  "قلیم (قالین)","قنات","حمام بڑا","حمام چھوٹا","شامیانہ","گلاس شیشہ",
+  "گلاس اسٹیل","پلیٹیں","پیڑے","ٹب","چمچ","رسی","بانس","جگ","ڈِش",
+  "ڈونگا","لوٹے","ڈِش چمچ","ڈونگا چمچ"
+];
+const memoryRates = {};
+
+function renderTable(){
+  const tbody = document.getElementById("itemsBody");
+  tbody.innerHTML="";
+  items.forEach(item=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${item}</td>
+      <td><input type="number" min="0" value="0" onchange="updateTotal()"></td>
+      <td class="rateCol"><input type="number" min="0" value="${memoryRates[item]||0}" onchange="saveRate(this,'${item}')"></td>
+      <td class="rateCol" id="our-${item}">0</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function saveRate(el,item){
+  memoryRates[item]=el.value;
+  updateTotal();
+}
+
+function toggleRates(){
+  const purpose=document.getElementById("purpose").value;
+  const rateCols=document.querySelectorAll(".rateCol");
+  const display=document.getElementById("purposeDisplay");
+
+  if(purpose==="fotgi"){
+    rateCols.forEach(col=>col.style.display="none");
+    document.getElementById("totalBox").innerText="";
+    display.innerText="منتخب مقصد: فوتگی";
+  }else{
+    rateCols.forEach(col=>col.style.display="table-cell");
+    updateTotal();
+    display.innerText="منتخب مقصد: فوتگی کے علاوہ";
+  }
+}
+
+function updateTotal(){
+  const purpose=document.getElementById("purpose").value;
+  if(purpose==="fotgi") return;
+  let total=0;
+  document.querySelectorAll("#itemsBody tr").forEach(tr=>{
+    const qty=parseInt(tr.children[1].children[0].value)||0;
+    const marketRate=parseFloat(tr.children[2].children[0].value)||0;
+    const ourRate=qty*(marketRate*0.5);
+    tr.children[3].innerText=ourRate;
+    total+=ourRate;
+  });
+  document.getElementById("totalBox").innerText="کل رقم: "+total+" روپے";
+}
+
+function prepareCapture(){
+  const clone=document.getElementById("captureArea").cloneNode(true);
+  clone.style.width="900px";
+  clone.style.padding="30px";
+
+  clone.querySelectorAll('table, th, td').forEach(el=>{
+    el.style.border="2px solid #333";
+  });
+
+  clone.querySelectorAll('input,textarea').forEach(el=>{
+    const span=document.createElement('span');
+    span.style.fontWeight='bold';
+    span.style.fontSize='16px';
+    span.style.display='inline-block';
+    span.style.minWidth='80px';
+    span.style.textAlign='center';
+    span.innerText = el.value;
+    el.parentNode.replaceChild(span, el);
+  });
+
+  const purposeVal=document.getElementById("purpose").value==="fotgi" ? "فوتگی" : "فوتگی کے علاوہ";
+  const selectEl=clone.querySelector("select#purpose");
+  if(selectEl) selectEl.remove();
+  const display=clone.querySelector("#purposeDisplay");
+  if(display) display.innerText="منتخب مقصد: "+purposeVal;
+
+  clone.querySelectorAll('#itemsBody tr').forEach(row=>{
+    const qty=parseInt(row.children[1].innerText)||0;
+    if(qty===0) row.style.display='none';
+  });
+
+  document.body.appendChild(clone);
+  return clone;
+}
+
+function getFileName(ext){
+  const name=document.getElementById("name").value.trim();
+  return name ? name+"."+ext : "tanzeem."+ext;
+}
+
+function downloadPNG(){
+  const clone = prepareCapture();
+  html2canvas(clone,{scale:2, useCORS:true}).then(canvas=>{
+    const link=document.createElement("a");
+    link.download=getFileName("png");
+    link.href=canvas.toDataURL("image/png");
+    link.click();
+    clone.remove();
+  });
+}
+
+function downloadPDF(){
+  const {jsPDF}=window.jspdf;
+  const clone = prepareCapture();
+  html2canvas(clone,{scale:2, useCORS:true}).then(canvas=>{
+    const imgData=canvas.toDataURL("image/png");
+    const pdf=new jsPDF("p","pt","a4");
+    pdf.addImage(imgData,"PNG",20,20,555,canvas.height*555/canvas.width);
+    pdf.save(getFileName("pdf"));
+    clone.remove();
+  });
+}
+
+renderTable();
+toggleRates();
+
+// PWA Service Worker Register
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js")
+    .then(() => console.log("Service Worker Registered"));
+}
+</script>
+</body>
+</html>
