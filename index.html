@@ -11,11 +11,12 @@
 <!-- Fonts + Libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- Jameel Noori Nastaleeq Font -->
 <link href="https://fonts.cdnfonts.com/css/jameel-noori-nastaleeq" rel="stylesheet">
 
 <style>
 body {
-  font-family: 'Jameel Noori Nastaleeq', serif;
+  font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif;
   margin:0;
   background:#f5f6fa;
   text-align:center;
@@ -37,38 +38,125 @@ h2 {
   color:white;
   margin-bottom:20px;
 }
-.section { margin-bottom:20px; padding:18px; border-radius:10px; background:#f0f2f5; }
-.section-title { font-weight:bold; font-size:18px; margin-bottom:12px; color:#003366; }
+.section { 
+  margin-bottom:20px; 
+  padding:18px; 
+  border-radius:10px; 
+  background:#f0f2f5; 
+  border: 2px solid #336699;
+}
+.section-title { 
+  font-weight:bold; 
+  font-size:18px; 
+  margin-bottom:12px; 
+  color:#003366; 
+}
 
 /* ذاتی معلومات کے ہر ان پٹ پر ہلکی بارڈر */
 .info input, .info textarea, .info select {
-  width:100%; padding:14px; margin:5px 0;
-  border-radius:8px; border:1px solid #bbb;
-  font-size:18px; font-weight:bold; text-align:center;
-  background:#ffffff; color:#2c3e50; box-sizing:border-box;
+  width:100%; 
+  padding:14px; 
+  margin:5px 0;
+  border-radius:8px; 
+  border:2px solid #336699;
+  font-size:18px; 
+  font-weight:bold; 
+  text-align:center;
+  background:#ffffff; 
+  color:#2c3e50; 
+  box-sizing:border-box;
 }
-.info textarea { height:90px; resize:none; }
-.info select { height:55px; font-weight:bold; background:#eef2f7; }
-.info { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
+.info textarea { 
+  height:90px; 
+  resize:none; 
+}
+.info select { 
+  height:55px; 
+  font-weight:bold; 
+  background:#eef2f7; 
+}
+.info { 
+  display:grid; 
+  grid-template-columns:1fr 1fr; 
+  gap:15px; 
+}
 
-table { width:100%; border-collapse: collapse; margin-top:15px; font-size:16px; text-align:center; }
-table, th, td { border:1px solid #777; }
-th { padding:14px; color:white; background:#003366; }
-tr:nth-child(even){background:#f9f9f9;}
-td { padding:12px; vertical-align:middle; }
-table td input { width:90px; padding:10px; font-size:16px; font-weight:bold; text-align:center; border:1px solid #aaa; border-radius:5px; }
+table { 
+  width:100%; 
+  border-collapse: collapse; 
+  margin-top:15px; 
+  font-size:16px; 
+  text-align:center; 
+  border: 2px solid #336699;
+}
+table, th, td { 
+  border:2px solid #336699;
+}
+th { 
+  padding:14px; 
+  color:white; 
+  background:#003366; 
+}
+tr:nth-child(even){
+  background:#f9f9f9;
+}
+td { 
+  padding:12px; 
+  vertical-align:middle; 
+}
+table td input { 
+  width:90px; 
+  padding:10px; 
+  font-size:16px; 
+  font-weight:bold; 
+  text-align:center; 
+  border:2px solid #336699;
+  border-radius:5px; 
+}
 
-#totalBox { font-weight:bold; text-align:center; font-size:18px; margin-top:15px; color:#003366; }
-.terms p { margin:5px 0; font-size:14px; text-align:right; }
-.download-btns { text-align:center; margin-top:20px;}
-button { padding:14px 24px; margin:5px; border:none; border-radius:8px; background:#336699; color:white; cursor:pointer; font-size:16px; transition:0.3s; }
-button:hover { background:#003366; }
+#totalBox { 
+  font-weight:bold; 
+  text-align:center; 
+  font-size:18px; 
+  margin-top:15px; 
+  color:#003366; 
+  border: 2px solid #336699;
+  padding: 10px;
+  border-radius: 8px;
+}
+.terms p { 
+  margin:5px 0; 
+  font-size:14px; 
+  text-align:right; 
+}
+.download-btns { 
+  text-align:center; 
+  margin-top:20px;
+}
+button { 
+  padding:14px 24px; 
+  margin:5px; 
+  border:none; 
+  border-radius:8px; 
+  background:#336699; 
+  color:white; 
+  cursor:pointer; 
+  font-size:16px; 
+  transition:0.3s; 
+}
+button:hover { 
+  background:#003366; 
+}
 
 #purposeDisplay {
-  font-size:24px; font-weight:bold;
-  margin-top:15px; padding:10px;
+  font-size:24px; 
+  font-weight:bold;
+  margin-top:15px; 
+  padding:10px;
   border:2px solid #003366;
-  border-radius:8px; background:#eef3fb; color:#003366;
+  border-radius:8px; 
+  background:#eef3fb; 
+  color:#003366;
 }
 
 @media(max-width:768px){
@@ -138,15 +226,18 @@ button:hover { background:#003366; }
 <div class="download-btns">
   <button onclick="downloadPNG()">Download as PNG</button>
   <button onclick="downloadPDF()">Download as PDF</button>
+  <button onclick="clearRates()">قیمتیں صاف کریں</button>
 </div>
 
 <script>
 const items = [
-  "قلیم (قالین)","قنات","حمام بڑا","حمام چھوٹا","شامیانہ","گلاس شیشہ",
+  "قالین","قنات","حمام بڑا","حمام چھوٹا","شامیانہ","گلاس شیشہ",
   "گلاس اسٹیل","پلیٹیں","پیڑے","ٹب","چمچ","رسی","بانس","جگ","ڈِش",
   "ڈونگا","لوٹے","ڈِش چمچ","ڈونگا چمچ"
 ];
-const memoryRates = {};
+
+// Load rates from localStorage or initialize empty object
+let memoryRates = JSON.parse(localStorage.getItem('tanzeemRates')) || {};
 
 function renderTable(){
   const tbody = document.getElementById("itemsBody");
@@ -165,6 +256,8 @@ function renderTable(){
 
 function saveRate(el,item){
   memoryRates[item]=el.value;
+  // Save to localStorage
+  localStorage.setItem('tanzeemRates', JSON.stringify(memoryRates));
   updateTotal();
 }
 
@@ -202,28 +295,43 @@ function prepareCapture(){
   const clone=document.getElementById("captureArea").cloneNode(true);
   clone.style.width="900px";
   clone.style.padding="30px";
+  clone.style.border = "3px solid #003366";
 
+  // Ensure all borders are visible in the capture
+  clone.querySelectorAll('.section').forEach(el => {
+    el.style.border = "2px solid #336699";
+  });
+  
   clone.querySelectorAll('table, th, td').forEach(el=>{
-    el.style.border="2px solid #333";
+    el.style.border="2px solid #336699";
   });
 
-  clone.querySelectorAll('input,textarea').forEach(el=>{
+  // Hide the dropdown in download but keep the purpose display
+  const selectEl = clone.querySelector("select#purpose");
+  if(selectEl) selectEl.style.display = "none";
+  
+  // Convert input values to spans with borders
+  clone.querySelectorAll('input, textarea').forEach(el=>{
     const span=document.createElement('span');
     span.style.fontWeight='bold';
     span.style.fontSize='16px';
     span.style.display='inline-block';
     span.style.minWidth='80px';
     span.style.textAlign='center';
+    span.style.padding = '5px';
+    span.style.border = '1px solid #336699';
+    span.style.borderRadius = '5px';
+    span.style.margin = '2px';
     span.innerText = el.value;
     el.parentNode.replaceChild(span, el);
   });
 
+  // Keep the purpose display text
   const purposeVal=document.getElementById("purpose").value==="fotgi" ? "فوتگی" : "فوتگی کے علاوہ";
-  const selectEl=clone.querySelector("select#purpose");
-  if(selectEl) selectEl.remove();
   const display=clone.querySelector("#purposeDisplay");
   if(display) display.innerText="منتخب مقصد: "+purposeVal;
 
+  // Hide rows with zero quantity
   clone.querySelectorAll('#itemsBody tr').forEach(row=>{
     const qty=parseInt(row.children[1].innerText)||0;
     if(qty===0) row.style.display='none';
@@ -261,6 +369,16 @@ function downloadPDF(){
   });
 }
 
+function clearRates(){
+  if(confirm("کیا آپ واقعی تمام قیمتیں صاف کرنا چاہتے ہیں؟")) {
+    memoryRates = {};
+    localStorage.removeItem('tanzeemRates');
+    renderTable();
+    alert("تمام قیمتیں صاف کر دی گئی ہیں");
+  }
+}
+
+// Initialize the page
 renderTable();
 toggleRates();
 
