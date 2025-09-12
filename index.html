@@ -13,9 +13,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <!-- Jameel Noori Nastaleeq Font -->
 <link href="https://fonts.cdnfonts.com/css/jameel-noori-nastaleeq" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
 
 <style>
 body {
@@ -169,11 +166,6 @@ button:hover {
   table td input { width:70px; font-size:14px; }
   #purposeDisplay { font-size:20px; }
 }
-
-body {
-    font-family: 'Noto Nastaliq Urdu', serif;
-}
-  
 </style>
 </head>
 <body>
@@ -234,7 +226,6 @@ body {
 <div class="download-btns">
   <button onclick="downloadPNG()">Download as PNG</button>
   <button onclick="downloadPDF()">Download as PDF</button>
-  <button onclick="clearRates()">قیمتیں صاف کریں</button>
 </div>
 
 <script>
@@ -244,29 +235,43 @@ const items = [
   "ڈونگا","لوٹے","ڈِش چمچ","ڈونگا چمچ"
 ];
 
-// Load rates from localStorage or initialize empty object
-let memoryRates = JSON.parse(localStorage.getItem('tanzeemRates')) || {};
+// Predefined market rates (0 values replaced with "-")
+const marketRates = {
+  "قالین": 300,
+  "قنات": 200,
+  "حمام بڑا": 300,
+  "حمام چھوٹا": 200,
+  "شامیانہ": 500,
+  "گلاس شیشہ": 20,
+  "گلاس اسٹیل": 10,
+  "پلیٹیں": 20,
+  "پیڑے": 200,
+  "ٹب": 150,
+  "چمچ": 6,
+  "رسی": "-",
+  "بانس": "-",
+  "جگ": 30,
+  "ڈِش": 30,
+  "ڈونگا": 40,
+  "لوٹے": "-",
+  "ڈِش چمچ": 10,
+  "ڈونگا چمچ": 10
+};
 
 function renderTable(){
   const tbody = document.getElementById("itemsBody");
   tbody.innerHTML="";
   items.forEach(item=>{
     const tr=document.createElement("tr");
+    const rateValue = marketRates[item] === "-" ? "-" : marketRates[item];
     tr.innerHTML=`
       <td>${item}</td>
       <td><input type="number" min="0" value="0" onchange="updateTotal()"></td>
-      <td class="rateCol"><input type="number" min="0" value="${memoryRates[item]||0}" onchange="saveRate(this,'${item}')"></td>
+      <td class="rateCol">${rateValue}</td>
       <td class="rateCol" id="our-${item}">0</td>
     `;
     tbody.appendChild(tr);
   });
-}
-
-function saveRate(el,item){
-  memoryRates[item]=el.value;
-  // Save to localStorage
-  localStorage.setItem('tanzeemRates', JSON.stringify(memoryRates));
-  updateTotal();
 }
 
 function toggleRates(){
@@ -291,7 +296,8 @@ function updateTotal(){
   let total=0;
   document.querySelectorAll("#itemsBody tr").forEach(tr=>{
     const qty=parseInt(tr.children[1].children[0].value)||0;
-    const marketRate=parseFloat(tr.children[2].children[0].value)||0;
+    const marketRateCell = tr.children[2];
+    const marketRate = marketRateCell.innerText === "-" ? 0 : parseFloat(marketRateCell.innerText) || 0;
     const ourRate=qty*(marketRate*0.5);
     tr.children[3].innerText=ourRate;
     total+=ourRate;
@@ -377,15 +383,6 @@ function downloadPDF(){
   });
 }
 
-function clearRates(){
-  if(confirm("کیا آپ واقعی تمام قیمتیں صاف کرنا چاہتے ہیں؟")) {
-    memoryRates = {};
-    localStorage.removeItem('tanzeemRates');
-    renderTable();
-    alert("تمام قیمتیں صاف کر دی گئی ہیں");
-  }
-}
-
 // Initialize the page
 renderTable();
 toggleRates();
@@ -398,5 +395,3 @@ if ("serviceWorker" in navigator) {
 </script>
 </body>
 </html>
-
-
